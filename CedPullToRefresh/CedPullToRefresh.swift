@@ -8,7 +8,7 @@
 
 import UIKit
 
-private var pullToRefreshViewKey: Void?
+private var pullToRefreshViewKey = "CedPullToRefreshView"
 private let observeKeyContentOffset = "contentOffset"
 private let observeKeyFrame = "frame"
 
@@ -16,13 +16,29 @@ private let ICSPullToRefreshViewHeight: CGFloat = 60
 
 public extension UIScrollView {
     
-    private var cedPullToRefreshView: UIView?
+    private var cedPullToRefreshView: UIView? {
+        get {
+            return objc_getAssociatedObject(self, &pullToRefreshViewKey) as? UIView
+        }
+        set {
+            self.willChangeValue(forKey: pullToRefreshViewKey)
+            objc_setAssociatedObject(self, &pullToRefreshViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+            self.didChangeValue(forKey: pullToRefreshViewKey)
+        }
+    }
     
-    public func ced_setCustomPullToRefreshView<T: UIView where T: CedLoadingProtocol>(view: T) {
-        
+    public func ced_setCustomPullToRefreshView<T: UIView>(view: T) where T: CedLoadingProtocol {
+        self.cedPullToRefreshView = view
     }
     
     public func ced_addPullToRefresh(actionHandler: @escaping (() -> Void)) {
+        if self.cedPullToRefreshView == nil {
+            // 启用默认View
+            self.cedPullToRefreshView = CedRefreshHeaderView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 0))
+            self.insertSubview(self.cedPullToRefreshView!, at: 0)
+        } else {
+            
+        }
         
     }
 

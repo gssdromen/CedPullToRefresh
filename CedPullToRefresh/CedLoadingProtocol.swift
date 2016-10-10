@@ -14,10 +14,10 @@ public enum LoadingState {
 }
 
 public protocol CedLoadingProtocol {
-    func startPulling()
-    func releaseToRefresh()
-    func refreshing()
-    func finishRefresh()
+    func startPulling(offset: CGPoint)
+    func releaseToRefresh(offset: CGPoint)
+    func refreshing(offset: CGPoint)
+    func finishRefresh(offset: CGPoint)
 
     var loadingState: LoadingState { get set }
     var triggeredByUser: Bool { get set }
