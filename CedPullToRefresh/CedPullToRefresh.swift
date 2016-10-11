@@ -12,7 +12,7 @@ private var pullToRefreshViewKey = "CedPullToRefreshView"
 private let observeKeyContentOffset = "contentOffset"
 private let observeKeyFrame = "frame"
 
-private let ICSPullToRefreshViewHeight: CGFloat = 60
+private let defaultPullToRefreshViewHeight: CGFloat = 60
 
 public extension UIScrollView {
     
@@ -31,18 +31,18 @@ public extension UIScrollView {
         self.cedPullToRefreshView = refreshView
     }
     
-    public func ced_addPullToRefresh(actionHandler: @escaping (() -> Void)) {
+    public func ced_addPullToRefreshWith(actionHandler: @escaping (() -> Void)) {
         if self.cedPullToRefreshView == nil {
             // 启用默认View
-            self.cedPullToRefreshView = CedRefreshHeaderView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 0))
-            self.insertSubview(self.cedPullToRefreshView!, at: 0)
-        } else {
-            
+            self.cedPullToRefreshView = CedRefreshHeaderView(frame: CGRect(x: 0, y: -defaultPullToRefreshViewHeight, width: self.bounds.width, height: defaultPullToRefreshViewHeight))
         }
+        self.insertSubview(self.cedPullToRefreshView!, at: 0)
+        self.cedPullToRefreshView?.actionHandler = actionHandler
+        self.ced_setShowsPullToRefresh(true)
     }
     
     public func ced_setShowsPullToRefresh(_ showsPullToRefresh: Bool) {
-        if self.cedPullToRefreshView == nil {
+        guard self.cedPullToRefreshView != nil else {
             return
         }
         self.cedPullToRefreshView!.isHidden = !showsPullToRefresh
@@ -73,29 +73,16 @@ public extension UIScrollView {
         }
     }
 
-//    public var ics_showsPullToRefresh: Bool {
-//        return icsPullToRefreshView != nil ? icsPullToRefreshView!.isHidden : false
-//    }
-//
-//    public func ics_addPullToRefreshHandler(_ actionHandler: @escaping ActionHandler) {
-//        if icsPullToRefreshView == nil {
-//            icsPullToRefreshView = ICSPullToRefreshView(frame: CGRect(x: CGFloat(0), y: -ICSPullToRefreshViewHeight, width: self.bounds.width, height: ICSPullToRefreshViewHeight))
-//            addSubview(icsPullToRefreshView!)
-//            icsPullToRefreshView?.scrollViewOriginContentTopInset = contentInset.top
-//        }
-//        icsPullToRefreshView?.actionHandler = actionHandler
-//        ics_setShowsPullToRefresh(true)
-//    }
-//
-//    public func ics_triggerPullToRefresh() {
-//        icsPullToRefreshView?.state = .triggered
-//        icsPullToRefreshView?.startAnimating()
-//    }
-//
+    public var ced_showsPullToRefresh: Bool {
+        return self.cedPullToRefreshView != nil ? self.cedPullToRefreshView!.isHidden : false
+    }
 
-//
-
-
+    public func ced_triggerPullToRefresh() {
+        if self.cedPullToRefreshView != nil {
+            self.cedPullToRefreshView!.loadingState = LoadingState.Refreshing
+            self.cedPullToRefreshView!.refreshing(offset: CGPoint(x: 0, y: 0))
+        }
+    }
 }
 
 //open class ICSPullToRefreshView: UIView {

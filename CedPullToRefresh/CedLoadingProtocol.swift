@@ -7,10 +7,11 @@
 //
 
 public enum LoadingState {
+    case Stopped
     case Pulling
     case ReleaseToRefresh
     case Refreshing
-    case Finished
+    case Finishing
 }
 
 public protocol CedLoadingProtocol {
