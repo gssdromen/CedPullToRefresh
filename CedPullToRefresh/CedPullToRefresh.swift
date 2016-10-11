@@ -16,9 +16,9 @@ private let ICSPullToRefreshViewHeight: CGFloat = 60
 
 public extension UIScrollView {
     
-    private var cedPullToRefreshView: UIView? {
+    private var cedPullToRefreshView: CedRefreshView? {
         get {
-            return objc_getAssociatedObject(self, &pullToRefreshViewKey) as? UIView
+            return objc_getAssociatedObject(self, &pullToRefreshViewKey) as? CedRefreshView
         }
         set {
             self.willChangeValue(forKey: pullToRefreshViewKey)
@@ -27,8 +27,8 @@ public extension UIScrollView {
         }
     }
     
-    public func ced_setCustomPullToRefreshView<T: UIView>(view: T) where T: CedLoadingProtocol {
-        self.cedPullToRefreshView = view
+    public func ced_setCustomPullToRefreshView(refreshView: CedRefreshView) {
+        self.cedPullToRefreshView = refreshView
     }
     
     public func ced_addPullToRefresh(actionHandler: @escaping (() -> Void)) {
@@ -39,20 +39,40 @@ public extension UIScrollView {
         } else {
             
         }
-        
+    }
+    
+    public func ced_setShowsPullToRefresh(_ showsPullToRefresh: Bool) {
+        if self.cedPullToRefreshView == nil {
+            return
+        }
+        self.cedPullToRefreshView!.isHidden = !showsPullToRefresh
+        if showsPullToRefresh {
+            self.ced_addPullToRefreshObservers()
+        } else {
+            self.ced_removePullToRefreshObservers()
+        }
+    }
+    
+    func ced_addPullToRefreshObservers() {
+        if self.cedPullToRefreshView != nil {
+            if !self.cedPullToRefreshView!.isObserving {
+                self.addObserver(self.cedPullToRefreshView!, forKeyPath: observeKeyContentOffset, options: .new, context: nil)
+                self.addObserver(self.cedPullToRefreshView!, forKeyPath: observeKeyFrame, options: .new, context: nil)
+                self.cedPullToRefreshView!.isObserving = true
+            }
+        }
+    }
+    
+    func ced_removePullToRefreshObservers() {
+        if self.cedPullToRefreshView != nil {
+            if self.cedPullToRefreshView!.isObserving {
+                self.removeObserver(self.cedPullToRefreshView!, forKeyPath: observeKeyContentOffset)
+                self.removeObserver(self.cedPullToRefreshView!, forKeyPath: observeKeyFrame)
+                self.cedPullToRefreshView!.isObserving = false
+            }
+        }
     }
 
-//    public var icsPullToRefreshView: ICSPullToRefreshView? {
-//        get {
-//            return objc_getAssociatedObject(self, &pullToRefreshViewKey) as? ICSPullToRefreshView
-//        }
-//        set(newValue) {
-//            self.willChangeValue(forKey: "ICSPullToRefreshView")
-//            objc_setAssociatedObject(self, &pullToRefreshViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-//            self.didChangeValue(forKey: "ICSPullToRefreshView")
-//        }
-//    }
-//
 //    public var ics_showsPullToRefresh: Bool {
 //        return icsPullToRefreshView != nil ? icsPullToRefreshView!.isHidden : false
 //    }
@@ -72,33 +92,9 @@ public extension UIScrollView {
 //        icsPullToRefreshView?.startAnimating()
 //    }
 //
-//    public func ics_setShowsPullToRefresh(_ showsPullToRefresh: Bool) {
-//        if icsPullToRefreshView == nil {
-//            return
-//        }
-//        icsPullToRefreshView!.isHidden = !showsPullToRefresh
-//        if showsPullToRefresh {
-//            ics_addPullToRefreshObservers()
-//        } else {
-//            ics_removePullToRefreshObservers()
-//        }
-//    }
+
 //
-//    func ics_addPullToRefreshObservers() {
-//        if icsPullToRefreshView?.isObserving != nil && !icsPullToRefreshView!.isObserving {
-//            addObserver(icsPullToRefreshView!, forKeyPath: observeKeyContentOffset, options: .new, context: nil)
-//            addObserver(icsPullToRefreshView!, forKeyPath: observeKeyFrame, options: .new, context: nil)
-//            icsPullToRefreshView!.isObserving = true
-//        }
-//    }
-//
-//    func ics_removePullToRefreshObservers() {
-//        if icsPullToRefreshView?.isObserving != nil && icsPullToRefreshView!.isObserving {
-//            removeObserver(icsPullToRefreshView!, forKeyPath: observeKeyContentOffset)
-//            removeObserver(icsPullToRefreshView!, forKeyPath: observeKeyFrame)
-//            icsPullToRefreshView!.isObserving = false
-//        }
-//    }
+
 
 }
 

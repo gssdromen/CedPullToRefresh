@@ -8,8 +8,8 @@
 
 import UIKit
 
-class CedRefreshView: UIView, CedLoadingProtocol {
-    var loadingState: LoadingState = LoadingState.Finished {
+public class CedRefreshView: UIView, CedLoadingProtocol {
+    public var loadingState: LoadingState = LoadingState.Finished {
         willSet {
             if self.loadingState != newValue {
                 // 更新UI
@@ -35,24 +35,26 @@ class CedRefreshView: UIView, CedLoadingProtocol {
         }
     }
     
-    var triggeredByUser: Bool = false
+    public var isObserving: Bool = false
     
-    var actionHandler: (() -> Void)? = nil
+    public var triggeredByUser: Bool = false
+    
+    public var actionHandler: (() -> Void)? = nil
 
     // MARK: - CedLoadingProtocol
-    func startPulling(offset: CGPoint) {
+    public func startPulling(offset: CGPoint) {
         
     }
     
-    func releaseToRefresh(offset: CGPoint) {
+    public func releaseToRefresh(offset: CGPoint) {
         
     }
     
-    func refreshing(offset: CGPoint) {
+    public func refreshing(offset: CGPoint) {
         
     }
     
-    func finishRefresh(offset: CGPoint) {
+    public func finishRefresh(offset: CGPoint) {
         
     }
     

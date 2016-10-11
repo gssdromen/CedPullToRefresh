@@ -21,5 +21,6 @@ public protocol CedLoadingProtocol {
 
     var loadingState: LoadingState { get set }
     var triggeredByUser: Bool { get set }
+    var isObserving: Bool { get set }
     var actionHandler: (() -> Void)? { get set }
 }
