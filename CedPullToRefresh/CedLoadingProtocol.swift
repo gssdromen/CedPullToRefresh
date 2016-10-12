@@ -19,6 +19,7 @@ public protocol CedLoadingProtocol {
     func releaseToRefresh(offset: CGPoint)
     func refreshing(offset: CGPoint)
     func finishRefresh(offset: CGPoint)
+    func stopped()
 
     var loadingState: LoadingState { get set }
     var triggeredByUser: Bool { get set }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A72A8EA71DA741CD002EFED7 /* CedPullToRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A72A8EAE1DA743B0002EFED7 /* CedPullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */; };
-		A72A8EB01DA743F5002EFED7 /* CedInfiniteScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EAF1DA743F5002EFED7 /* CedInfiniteScroll.swift */; };
 		A72A8EB21DA7445F002EFED7 /* CedLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */; };
 		A74D17D11DAB6A2D0043793B /* CedRefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74D17D01DAB6A2D0043793B /* CedRefreshView.swift */; };
 		AEA463C11DA7B68C00B22D70 /* CedRefreshHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA463C01DA7B68C00B22D70 /* CedRefreshHeaderView.swift */; };
@@ -20,7 +19,6 @@
 		A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CedPullToRefresh.h; sourceTree = "<group>"; };
 		A72A8EA61DA741CD002EFED7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedPullToRefresh.swift; sourceTree = "<group>"; };
-		A72A8EAF1DA743F5002EFED7 /* CedInfiniteScroll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedInfiniteScroll.swift; sourceTree = "<group>"; };
 		A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedLoadingProtocol.swift; sourceTree = "<group>"; };
 		A74D17D01DAB6A2D0043793B /* CedRefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshView.swift; sourceTree = "<group>"; };
 		AEA463C01DA7B68C00B22D70 /* CedRefreshHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshHeaderView.swift; sourceTree = "<group>"; };
@@ -59,7 +57,6 @@
 				A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */,
 				A72A8EA61DA741CD002EFED7 /* Info.plist */,
 				A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */,
-				A72A8EAF1DA743F5002EFED7 /* CedInfiniteScroll.swift */,
 				A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */,
 				AEA463C01DA7B68C00B22D70 /* CedRefreshHeaderView.swift */,
 				A74D17D01DAB6A2D0043793B /* CedRefreshView.swift */,
@@ -151,7 +148,6 @@
 				A74D17D11DAB6A2D0043793B /* CedRefreshView.swift in Sources */,
 				A72A8EAE1DA743B0002EFED7 /* CedPullToRefresh.swift in Sources */,
 				A72A8EB21DA7445F002EFED7 /* CedLoadingProtocol.swift in Sources */,
-				A72A8EB01DA743F5002EFED7 /* CedInfiniteScroll.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
