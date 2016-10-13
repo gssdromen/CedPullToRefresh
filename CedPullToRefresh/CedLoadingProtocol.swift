@@ -11,14 +11,12 @@ public enum LoadingState {
     case Pulling
     case ReleaseToRefresh
     case Refreshing
-    case Finishing
 }
 
 public protocol CedLoadingProtocol {
     func startPulling(offset: CGPoint)
     func releaseToRefresh(offset: CGPoint)
     func refreshing(offset: CGPoint)
-    func finishRefresh(offset: CGPoint)
     func stopped()
 
     var loadingState: LoadingState { get set }

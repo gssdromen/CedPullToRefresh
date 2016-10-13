@@ -29,8 +29,6 @@ public class CedRefreshView: UIView, CedLoadingProtocol {
                 break
             case LoadingState.Refreshing:
                 break
-            case LoadingState.Finishing:
-                break
             }
         }
     }
@@ -75,9 +73,8 @@ public class CedRefreshView: UIView, CedLoadingProtocol {
         if keyPath == observeKeyContentOffset {
             if change != nil {
                 let point: CGPoint = (change![NSKeyValueChangeKey.newKey] as! NSValue).cgPointValue
-                if point != nil {
-                    print(NSStringFromCGPoint(point))
-                }
+                print(NSStringFromCGPoint(point))
+                
                 self.contentOffsetChangeAction(contentOffset: point)
             }
         } else if keyPath == observeKeyContentSize {
@@ -85,6 +82,12 @@ public class CedRefreshView: UIView, CedLoadingProtocol {
         }
     }
     
+    public func stopAnimating() {
+        self.loadingState = LoadingState.Stopped
+        self.resetContentInset()
+    }
+    
+    // MARK: - Internal Methods
     func contentOffsetChangeAction(contentOffset: CGPoint?) {
         guard self.scrollView != nil else {
             return
@@ -96,13 +99,18 @@ public class CedRefreshView: UIView, CedLoadingProtocol {
             if !self.scrollView!.isDragging && self.loadingState == LoadingState.ReleaseToRefresh {
                 self.loadingState = LoadingState.Refreshing
                 self.refreshing(offset: contentOffset!)
-            } else if offset.y < scrollOffsetThreshold && scrollView!.isDragging {
-                if self.loadingState == LoadingState.Stopped {
-                    self.loadingState = LoadingState.Pulling
-                } else if self.loadingState == LoadingState.Pulling {
-                    self.startPulling(offset: offset)
+            } else if offset.y >= scrollOffsetThreshold { // 还没到刷新的触发线
+                if self.scrollView!.isDragging {
+                    if self.loadingState == LoadingState.Stopped {
+                        self.loadingState = LoadingState.Pulling
+                        self.startPulling(offset: offset)
+                    }
+                } else {
+                    if self.loadingState == LoadingState.Pulling {
+                        self.startPulling(offset: offset)
+                    }
                 }
-            } else if offset.y >= scrollOffsetThreshold {
+            } else if offset.y < scrollOffsetThreshold && scrollView!.isDragging { // 到刷新的触发线
                 if self.scrollView!.isDragging {
                     if self.loadingState == LoadingState.Pulling {
                         self.loadingState = LoadingState.ReleaseToRefresh
@@ -111,6 +119,8 @@ public class CedRefreshView: UIView, CedLoadingProtocol {
                 } else {
                     if self.loadingState == LoadingState.ReleaseToRefresh {
                         self.loadingState = LoadingState.Refreshing
+                        self.refreshing(offset: offset)
+                        self.setContentInsetForRefreshing()
                         if self.actionHandler != nil {
                             self.actionHandler!()
                         }
@@ -123,6 +133,36 @@ public class CedRefreshView: UIView, CedLoadingProtocol {
                 self.actionHandler!()
             }
         }
+        if offset.y == 0 {
+            self.loadingState = LoadingState.Stopped
+            self.stopped()
+            self.resetContentInset()
+        }
+    }
+    
+    func setContentInsetForRefreshing() {
+        guard self.scrollView != nil else {
+            return
+        }
+
+        let offset = max(self.scrollView!.contentOffset.y * -1, 0)
+        var currentInset = self.scrollView!.contentInset
+        currentInset.top = min(offset, self.scrollViewOriginContentTopInset + bounds.height)
+        self.setContentInset(edgeInsets: currentInset)
+    }
+    
+    func resetContentInset() {
+        guard self.scrollView != nil else {
+            return
+        }
+        
+        var currentInset = scrollView!.contentInset
+        currentInset.top = scrollViewOriginContentTopInset
+        self.setContentInset(edgeInsets: currentInset)
+    }
+    
+    func setContentInset(edgeInsets: UIEdgeInsets) {
+        self.scrollView?.contentInset = edgeInsets
     }
 
 }

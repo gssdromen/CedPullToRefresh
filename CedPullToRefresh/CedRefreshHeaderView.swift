@@ -11,6 +11,27 @@ import UIKit
 class CedRefreshHeaderView: CedRefreshView {
     var needsLayout = true
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    
+    // MARK: - Animate
+    override func startPulling(offset: CGPoint) {
+        super.startPulling(offset: offset)
+        print("in startPulling")
+    }
+    
+    override func releaseToRefresh(offset: CGPoint) {
+        super.releaseToRefresh(offset: offset)
+        print("in releaseToRefresh")
+    }
+    
+    override func refreshing(offset: CGPoint) {
+        super.refreshing(offset: offset)
+        print("in refreshing")
+    }
+    
+    override func stopped() {
+        super.stopped()
+        print("in stopped")
+    }
 
     // MARK: - Views About
     func addMyViews() {
@@ -25,6 +46,7 @@ class CedRefreshHeaderView: CedRefreshView {
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = UIColor.gray
         self.addMyViews()
     }
     
