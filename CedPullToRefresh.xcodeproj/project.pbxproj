@@ -11,6 +11,7 @@
 		A72A8EAE1DA743B0002EFED7 /* CedPullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */; };
 		A72A8EB21DA7445F002EFED7 /* CedLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */; };
 		A74D17D11DAB6A2D0043793B /* CedRefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74D17D01DAB6A2D0043793B /* CedRefreshView.swift */; };
+		A79E2C9A1E6036060010ED39 /* CedInfiniteRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79E2C991E6036060010ED39 /* CedInfiniteRefresh.swift */; };
 		AEA318801DAFCD6200180494 /* CedRefreshFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA3187F1DAFCD6200180494 /* CedRefreshFooterView.swift */; };
 		AEA463C11DA7B68C00B22D70 /* CedRefreshHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA463C01DA7B68C00B22D70 /* CedRefreshHeaderView.swift */; };
 /* End PBXBuildFile section */
@@ -22,6 +23,7 @@
 		A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedPullToRefresh.swift; sourceTree = "<group>"; };
 		A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedLoadingProtocol.swift; sourceTree = "<group>"; };
 		A74D17D01DAB6A2D0043793B /* CedRefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshView.swift; sourceTree = "<group>"; };
+		A79E2C991E6036060010ED39 /* CedInfiniteRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedInfiniteRefresh.swift; sourceTree = "<group>"; };
 		AEA3187F1DAFCD6200180494 /* CedRefreshFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshFooterView.swift; sourceTree = "<group>"; };
 		AEA463C01DA7B68C00B22D70 /* CedRefreshHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,6 +61,7 @@
 				A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */,
 				A72A8EA61DA741CD002EFED7 /* Info.plist */,
 				A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */,
+				A79E2C991E6036060010ED39 /* CedInfiniteRefresh.swift */,
 				A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */,
 				AEA463C01DA7B68C00B22D70 /* CedRefreshHeaderView.swift */,
 				A74D17D01DAB6A2D0043793B /* CedRefreshView.swift */,
@@ -147,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A79E2C9A1E6036060010ED39 /* CedInfiniteRefresh.swift in Sources */,
 				AEA463C11DA7B68C00B22D70 /* CedRefreshHeaderView.swift in Sources */,
 				A74D17D11DAB6A2D0043793B /* CedRefreshView.swift in Sources */,
 				AEA318801DAFCD6200180494 /* CedRefreshFooterView.swift in Sources */,
