@@ -8,7 +8,7 @@
 
 import UIKit
 
-private var infiniteRefreshViewKey = "CedInfiniteRefreshView"
+private var infiniteRefreshViewKey = "CedRefreshFooterView"
 
 private let observeKeyContentOffset = "contentOffset"
 private let observeKeyContentSize = "contentSize"
@@ -17,14 +17,14 @@ private let defaultPullToRefreshViewHeight: CGFloat = 60
 
 public extension UIScrollView {
 
-    private var cedInfiniteRefreshView: CedRefreshView? {
+    private var cedInfiniteRefreshView: CedRefreshFooterView! {
         get {
-            return objc_getAssociatedObject(self, &infiniteRefreshViewKey) as? CedRefreshView
+            return objc_getAssociatedObject(self, &infiniteRefreshViewKey) as? CedRefreshFooterView
         }
         set {
-            self.willChangeValue(forKey: infiniteRefreshViewKey)
+            willChangeValue(forKey: infiniteRefreshViewKey)
             objc_setAssociatedObject(self, &infiniteRefreshViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-            self.didChangeValue(forKey: infiniteRefreshViewKey)
+            didChangeValue(forKey: infiniteRefreshViewKey)
         }
     }
 
@@ -35,52 +35,32 @@ public extension UIScrollView {
         return !infiniteScrollingView.isHidden
     }
 
-    public func ced_addInfiniteScrollingWithHandler(actionHandler: @escaping (() -> Void)){
-        if cedInfiniteRefreshView == nil {
-            cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: CGFloat(0), y: contentSize.height, width: bounds.width, height: defaultPullToRefreshViewHeight))
-            addSubview(cedInfiniteRefreshView!)
-            cedInfiniteRefreshView?.autoresizingMask = .flexibleWidth
-//            cedInfiniteRefreshView?.scrollViewOriginContentBottomInset = contentInset.bottom
-        }
-        cedInfiniteRefreshView?.actionHandler = actionHandler
-        ced_setShowsInfiniteScrolling(true)
-    }
+    public func ced_addInfiniteRefreshWith(triggerAction: @escaping (() -> Void), loadingProtocol lp: CedLoadingProtocol? = nil) {
+        var loadingProtocol: CedLoadingProtocol = lp == nil ? CedRefreshDefaultFooter() : lp!
 
+        let height = loadingProtocol.triggerOffset
+
+        cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: 0, y: contentSize.height, width: bounds.width, height: height), lp: loadingProtocol)
+
+        addSubview(cedInfiniteRefreshView)
+        cedInfiniteRefreshView.triggerAction = triggerAction
+        cedInfiniteRefreshView.loadingAnimator = loadingProtocol
+        cedInfiniteRefreshView.scrollViewOriginContentInset = contentInset
+    }
+    
     public func ced_triggerInfiniteScrolling() {
-//        cedInfiniteRefreshView?.state = .triggered
-//        cedInfiniteRefreshView?.startAnimating()
-    }
-
-    public func ced_setShowsInfiniteScrolling(_ showsInfiniteScrolling: Bool) {
-        guard let infiniteScrollingView = cedInfiniteRefreshView else {
-            return
-        }
-        infiniteScrollingView.isHidden = !showsInfiniteScrolling
-        if showsInfiniteScrolling {
-            addInfiniteScrollingViewObservers()
-        } else {
-            removeInfiniteScrollingViewObservers()
-            infiniteScrollingView.setNeedsLayout()
-            infiniteScrollingView.frame = CGRect(x: CGFloat(0), y: contentSize.height, width: infiniteScrollingView.bounds.width, height: defaultPullToRefreshViewHeight)
+        if let view = cedInfiniteRefreshView {
+            UIView.animate(withDuration: 0.2, animations: {
+                view.startAnimating()
+            })
         }
     }
-
-    fileprivate func addInfiniteScrollingViewObservers() {
-        guard let infiniteScrollingView = cedInfiniteRefreshView, !infiniteScrollingView.isObserving else {
-            return
+    
+    public func ced_stopInfiniteScrolling() {
+        if let view = cedInfiniteRefreshView {
+            UIView.animate(withDuration: 0.2, animations: {
+                view.stopAnimating()
+            })
         }
-        addObserver(infiniteScrollingView, forKeyPath: observeKeyContentOffset, options:.new, context: nil)
-        addObserver(infiniteScrollingView, forKeyPath: observeKeyContentSize, options:.new, context: nil)
-        infiniteScrollingView.isObserving = true
     }
-
-    fileprivate func removeInfiniteScrollingViewObservers() {
-        guard let infiniteScrollingView = cedInfiniteRefreshView, infiniteScrollingView.isObserving else {
-            return
-        }
-        removeObserver(infiniteScrollingView, forKeyPath: observeKeyContentOffset)
-        removeObserver(infiniteScrollingView, forKeyPath: observeKeyContentSize)
-        infiniteScrollingView.isObserving = false
-    }
-
 }

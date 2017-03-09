@@ -8,161 +8,118 @@
 
 import UIKit
 
-private let observeKeyContentOffset = "contentOffset"
-private let observeKeyContentSize = "contentSize"
+public enum LoadingState {
+    case done
+    case pulling
+    case releaseToRefresh
+    case refreshing
+}
 
-public class CedRefreshView: UIView, CedLoadingProtocol {
-    public var isObserving: Bool = false
-    
-    public var triggeredByUser: Bool = false
-    
-    public var actionHandler: (() -> Void)? = nil
-    
-    public var loadingState: LoadingState = LoadingState.Stopped {
+
+public class CedRefreshView: UIView {
+    internal static let observeKeyContentOffset = "contentOffset"
+    internal static let observeKeyContentSize = "contentSize"
+
+    public var triggerAction: (() -> Void)? = nil
+
+    public var loadingView: UIView = UIView()
+
+    public var loadingState: LoadingState = LoadingState.done {
         willSet {
             switch newValue {
-            case LoadingState.Stopped:
+            case LoadingState.done:
                 break
-            case LoadingState.Pulling:
+            case LoadingState.pulling:
                 break
-            case LoadingState.ReleaseToRefresh:
+            case LoadingState.releaseToRefresh:
                 break
-            case LoadingState.Refreshing:
+            case LoadingState.refreshing:
                 break
             }
         }
     }
-    
-    open var scrollViewOriginContentTopInset: CGFloat = 0
-    
+
+    public var isObserving: Bool = false
+
+    public var scrollViewOriginContentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
+    public var loadingAnimator: CedLoadingProtocol! = nil
+
     public var scrollView: UIScrollView? {
-        return self.superview as? UIScrollView
+        return superview as? UIScrollView
     }
-    
-    // MARK: - CedLoadingProtocol
-    open func startPulling(offset: CGPoint) {
-        
-    }
-    
-    open func releaseToRefresh(offset: CGPoint) {
-        
-    }
-    
-    open func refreshing(offset: CGPoint) {
-        
-    }
-    
-    open func finishRefresh(offset: CGPoint) {
-        
-    }
-    
-    open func stopped() {
-        
-    }
-    
+
     // MARK: - Public Methods
-    public func getLoadingState() -> LoadingState {
-        return self.loadingState
-    }
-    
-    public func isTriggeredByUser() -> Bool {
-        return self.triggeredByUser
-    }
-    
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == observeKeyContentOffset {
-            if change != nil {
-                let point: CGPoint = (change![NSKeyValueChangeKey.newKey] as! NSValue).cgPointValue
-                print(NSStringFromCGPoint(point))
-                
-                self.contentOffsetChangeAction(contentOffset: point)
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if isObserving {
+            if keyPath == CedRefreshView.observeKeyContentOffset {
+                if change != nil {
+                    if let point: CGPoint = (change![NSKeyValueChangeKey.newKey] as? NSValue)?.cgPointValue {
+                        contentOffsetChangeAction(contentOffset: point)
+                    }
+                }
+            } else if keyPath == CedRefreshView.observeKeyContentSize {
+                contentSizeChangeAction()
             }
-        } else if keyPath == observeKeyContentSize {
-            self.setNeedsLayout()
         }
     }
-    
+
+    public func startAnimating() {
+        loadingState = LoadingState.refreshing
+        setContentInsetForRefreshing()
+        if triggerAction != nil {
+            triggerAction!()
+        }
+    }
+
     public func stopAnimating() {
-        self.loadingState = LoadingState.Stopped
-        self.resetContentInset()
+        loadingState = LoadingState.done
+        resetContentInset()
     }
-    
+
     // MARK: - Internal Methods
-    func contentOffsetChangeAction(contentOffset: CGPoint?) {
-        guard self.scrollView != nil else {
-            return
-        }
-        let offset: CGPoint = contentOffset == nil ? CGPoint(x: 0, y: 0) : contentOffset!
-
-        if self.loadingState != LoadingState.Refreshing {
-            let scrollOffsetThreshold = self.frame.origin.y - self.scrollViewOriginContentTopInset
-            if !self.scrollView!.isDragging && self.loadingState == LoadingState.ReleaseToRefresh {
-                self.loadingState = LoadingState.Refreshing
-                self.refreshing(offset: contentOffset!)
-            } else if offset.y >= scrollOffsetThreshold { // 还没到刷新的触发线
-                if self.scrollView!.isDragging {
-                    if self.loadingState == LoadingState.Stopped {
-                        self.loadingState = LoadingState.Pulling
-                        self.startPulling(offset: offset)
-                    }
-                } else {
-                    if self.loadingState == LoadingState.Pulling {
-                        self.startPulling(offset: offset)
-                    }
-                }
-            } else if offset.y < scrollOffsetThreshold && scrollView!.isDragging { // 到刷新的触发线
-                if self.scrollView!.isDragging {
-                    if self.loadingState == LoadingState.Pulling {
-                        self.loadingState = LoadingState.ReleaseToRefresh
-                        self.releaseToRefresh(offset: offset)
-                    }
-                } else {
-                    if self.loadingState == LoadingState.ReleaseToRefresh {
-                        self.loadingState = LoadingState.Refreshing
-                        self.refreshing(offset: offset)
-                        self.setContentInsetForRefreshing()
-                        if self.actionHandler != nil {
-                            self.actionHandler!()
-                        }
-                    }
-                }
-            }
-        } else {
-            self.loadingState = LoadingState.Refreshing
-            if self.actionHandler != nil {
-                self.actionHandler!()
-            }
-        }
-        if offset.y == 0 {
-            self.loadingState = LoadingState.Stopped
-            self.stopped()
-            self.resetContentInset()
-        }
+    func addMyViews() {
     }
-    
+
+    func layoutMyViews() {
+    }
+
+    func addObserver() {
+    }
+
+    func removeObserver() {
+    }
+
+    func contentSizeChangeAction() {
+    }
+
+    func contentOffsetChangeAction(contentOffset: CGPoint) {
+    }
+
     func setContentInsetForRefreshing() {
-        guard self.scrollView != nil else {
-            return
-        }
-
-        let offset = max(self.scrollView!.contentOffset.y * -1, 0)
-        var currentInset = self.scrollView!.contentInset
-        currentInset.top = min(offset, self.scrollViewOriginContentTopInset + bounds.height)
-        self.setContentInset(edgeInsets: currentInset)
     }
-    
+
     func resetContentInset() {
-        guard self.scrollView != nil else {
-            return
-        }
-        
-        var currentInset = scrollView!.contentInset
-        currentInset.top = scrollViewOriginContentTopInset
-        self.setContentInset(edgeInsets: currentInset)
-    }
-    
-    func setContentInset(edgeInsets: UIEdgeInsets) {
-        self.scrollView?.contentInset = edgeInsets
     }
 
+    func setContentInset(edgeInsets: UIEdgeInsets) {
+        scrollView?.contentInset = edgeInsets
+    }
+
+    // MARK: - Life Cycle
+    deinit {
+        removeObserver()
+    }
+
+    public override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        addMyViews()
+        layoutMyViews()
+
+        removeObserver()
+
+        DispatchQueue.main.async { [weak self] in
+            self?.addObserver()
+        }
+    }
 }

@@ -6,21 +6,33 @@
 //  Copyright © 2016年 CedricWu. All rights reserved.
 //
 
-public enum LoadingState {
-    case Stopped
-    case Pulling
-    case ReleaseToRefresh
-    case Refreshing
-}
+import UIKit
+
+
 
 public protocol CedLoadingProtocol {
-    func startPulling(offset: CGPoint)
-    func releaseToRefresh(offset: CGPoint)
-    func refreshing(offset: CGPoint)
-    func stopped()
+    
+    /// 开始滚动
+    ///
+    /// - Parameter percent: 0到1的CGFloat，表示百分比
+    func startPulling(percent: CGFloat)
+    
+    
+    /// 释放后开始更新
+    ///
+    /// - Parameter percent: 大于1的CGFloat，减1后表示超过的百分比
+    func releaseToRefresh(percent: CGFloat)
+    
+    
+    /// 开始更新状态
+    ///
+    /// - Parameter percent: 大于1的CGFloat，减1后表示超过的百分比，最后会变成1
+    func refreshing(percent: CGFloat)
+    
+    
+    /// 表示更新完成
+    func done()
 
-    var loadingState: LoadingState { get set }
-    var triggeredByUser: Bool { get set }
-    var isObserving: Bool { get set }
-    var actionHandler: (() -> Void)? { get set }
+    var loadingView: UIView { get }
+    var triggerOffset: CGFloat { get set }
 }

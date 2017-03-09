@@ -10,48 +10,114 @@ import UIKit
 
 class CedRefreshHeaderView: CedRefreshView {
     var needsLayout = true
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    
-    // MARK: - Animate
-    override func startPulling(offset: CGPoint) {
-        super.startPulling(offset: offset)
-        print("in startPulling")
-    }
-    
-    override func releaseToRefresh(offset: CGPoint) {
-        super.releaseToRefresh(offset: offset)
-        print("in releaseToRefresh")
-    }
-    
-    override func refreshing(offset: CGPoint) {
-        super.refreshing(offset: offset)
-        print("in refreshing")
-    }
-    
-    override func stopped() {
-        super.stopped()
-        print("in stopped")
-    }
 
     // MARK: - Views About
-    func addMyViews() {
-        self.activityIndicator.hidesWhenStopped = true
-        self.addSubview(self.activityIndicator)
+    override func addMyViews() {
+        addSubview(loadingAnimator.loadingView)
     }
 
-    func layoutMyViews() {
-        self.activityIndicator.center = CGPoint(x: self.bounds.width / 2, y: self.bounds.height / 2)
+    override func layoutMyViews() {
+        loadingAnimator.loadingView.frame = bounds
+    }
+
+    override func contentOffsetChangeAction(contentOffset: CGPoint) {
+        super.contentOffsetChangeAction(contentOffset: contentOffset)
+
+        let scrollOffsetStart: CGFloat = 0
+        let scrollOffsetThreshold: CGFloat = 0 - bounds.height
+        let percent: CGFloat = abs(contentOffset.y - scrollOffsetStart) / bounds.height
+
+        guard contentOffset.y < scrollOffsetStart else {
+            return
+        }
+
+        if contentOffset.y > scrollOffsetThreshold { // 还没到刷新的触发线
+            if loadingState == .pulling || loadingState == .done {
+                loadingState = .pulling
+                if loadingAnimator != nil {
+                    loadingAnimator.startPulling(percent: percent)
+                }
+            }
+        } else if contentOffset.y <= scrollOffsetThreshold { // 到刷新的触发线
+            if loadingState == .pulling {
+                loadingState = .releaseToRefresh
+                if loadingAnimator != nil {
+                    loadingAnimator.releaseToRefresh(percent: percent)
+                }
+            }
+        }
+        if let sc = scrollView {
+            if sc.isTracking == false && loadingState == .releaseToRefresh {
+                setContentInsetForRefreshing()
+                if loadingAnimator != nil {
+                    loadingAnimator.refreshing(percent: percent)
+                }
+                if triggerAction != nil {
+                    triggerAction!()
+                }
+            }
+        }
+    }
+
+    override func setContentInsetForRefreshing() {
+        super.setContentInsetForRefreshing()
+        guard scrollView != nil else {
+            return
+        }
+
+        let offset = max(scrollView!.contentOffset.y * -1, 0)
+        var currentInset = scrollView!.contentInset
+        currentInset.top = min(offset, scrollViewOriginContentInset.top + bounds.height)
+        setContentInset(edgeInsets: currentInset)
+    }
+
+    override func resetContentInset() {
+        super.resetContentInset()
+        guard scrollView != nil else {
+            return
+        }
+
+        var currentInset = scrollView!.contentInset
+        currentInset.top = scrollViewOriginContentInset.top
+        setContentInset(edgeInsets: currentInset)
+    }
+
+    override func addObserver() {
+        super.addObserver()
+
+        if let sc = scrollView {
+            if !isObserving {
+                sc.addObserver(self, forKeyPath: CedRefreshView.observeKeyContentOffset, options: [.new, .initial], context: nil)
+                sc.addObserver(self, forKeyPath: CedRefreshView.observeKeyContentSize, options: [.new, .initial], context: nil)
+                isObserving = true
+            }
+        }
+    }
+
+    override func removeObserver() {
+        super.removeObserver()
+
+        if let sc = self.scrollView {
+            if isObserving {
+                sc.removeObserver(self, forKeyPath: CedRefreshView.observeKeyContentOffset)
+                sc.removeObserver(self, forKeyPath: CedRefreshView.observeKeyContentSize)
+                isObserving = false
+            }
+        }
     }
 
     // MARK: - Life Cycle
+    convenience init(frame: CGRect, lp: CedLoadingProtocol? = nil) {
+        self.init(frame: frame)
+        loadingAnimator = lp == nil ? CedRefreshDefaultFooter() : lp!
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.gray
-        self.addMyViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func layoutSubviews() {
