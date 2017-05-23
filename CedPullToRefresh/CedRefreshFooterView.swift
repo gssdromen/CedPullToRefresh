@@ -10,6 +10,7 @@ import UIKit
 
 class CedRefreshFooterView: CedRefreshView {
     var needsLayout = true
+    var isEmpty = false
 
     // MARK: - Views About
     override func addMyViews() {
@@ -32,6 +33,15 @@ class CedRefreshFooterView: CedRefreshView {
         super.contentOffsetChangeAction(contentOffset: contentOffset)
 
         guard scrollView != nil else {
+            return
+        }
+
+        if isEmpty {
+            if loadingState != .empty {
+                loadingState = .empty
+                loadingAnimator.empty()
+            }
+
             return
         }
 
@@ -64,17 +74,23 @@ class CedRefreshFooterView: CedRefreshView {
             percent = abs(curOffset - scrollOffsetStart) / bounds.height
         }
 
+//        print("===============")
+//        print(curOffset)
+//        print(scrollOffsetStart)
+//        print(scrollOffsetThreshold)
+//        print("===============")
+
         if curOffset < scrollOffsetStart {
 
         } else if curOffset < scrollOffsetThreshold { // 未到达刷新触发线
-            if loadingState == .pulling || loadingState == .done {
+            if loadingState == .pulling || loadingState == .done || loadingState == .empty {
                 loadingState = .pulling
                 if loadingAnimator != nil {
                     loadingAnimator.startPulling(percent: percent)
                 }
             }
         } else if curOffset >= scrollOffsetThreshold { // 到达刷新触发线
-            if loadingState == .pulling {
+            if loadingState == .pulling || loadingState == .empty {
                 loadingState = .releaseToRefresh
                 if loadingAnimator != nil {
                     loadingAnimator.releaseToRefresh(percent: percent)

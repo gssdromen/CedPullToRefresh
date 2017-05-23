@@ -63,4 +63,16 @@ public extension UIScrollView {
             })
         }
     }
+
+    public func ced_needMoreData() {
+        if let view = cedInfiniteRefreshView {
+            view.isEmpty = false
+        }
+    }
+
+    public func ced_setNoMoreData() {
+        if let view = cedInfiniteRefreshView {
+            view.isEmpty = true
+        }
+    }
 }

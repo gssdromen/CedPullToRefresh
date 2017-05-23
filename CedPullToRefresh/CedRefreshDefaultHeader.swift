@@ -30,6 +30,10 @@ class CedRefreshDefaultHeader: UIView, CedLoadingProtocol {
     func done() {
         statusLabel.text = "done"
     }
+
+    func empty() {
+        statusLabel.text = "no data"
+    }
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {

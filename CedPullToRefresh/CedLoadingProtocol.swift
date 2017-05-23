@@ -33,6 +33,10 @@ public protocol CedLoadingProtocol {
     /// 表示更新完成
     func done()
 
+
+    /// 底部加载无更多数据 或 顶部刷新没有数据
+    func empty()
+
     var loadingView: UIView { get }
     var triggerOffset: CGFloat { get set }
 }

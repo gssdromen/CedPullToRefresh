@@ -30,6 +30,10 @@ class CedRefreshDefaultFooter: UIView, CedLoadingProtocol {
     func done() {
         statusLabel.text = "done"
     }
+
+    func empty() {
+        statusLabel.text = "no more data"
+    }
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {

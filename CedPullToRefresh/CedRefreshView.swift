@@ -13,6 +13,7 @@ public enum LoadingState {
     case pulling
     case releaseToRefresh
     case refreshing
+    case empty
 }
 
 
@@ -34,6 +35,8 @@ public class CedRefreshView: UIView {
             case LoadingState.releaseToRefresh:
                 break
             case LoadingState.refreshing:
+                break
+            case LoadingState.empty:
                 break
             }
         }
