@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A7094E361ED42809007C2968 /* CedRefreshDefaultFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7094E341ED42809007C2968 /* CedRefreshDefaultFooter.swift */; };
+		A7094E371ED42809007C2968 /* CedRefreshDefaultHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7094E351ED42809007C2968 /* CedRefreshDefaultHeader.swift */; };
 		A72A8EA71DA741CD002EFED7 /* CedPullToRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A72A8EAE1DA743B0002EFED7 /* CedPullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */; };
 		A72A8EB21DA7445F002EFED7 /* CedLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72A8EB11DA7445F002EFED7 /* CedLoadingProtocol.swift */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A7094E341ED42809007C2968 /* CedRefreshDefaultFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshDefaultFooter.swift; sourceTree = "<group>"; };
+		A7094E351ED42809007C2968 /* CedRefreshDefaultHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CedRefreshDefaultHeader.swift; sourceTree = "<group>"; };
 		A72A8EA21DA741CC002EFED7 /* CedPullToRefresh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CedPullToRefresh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CedPullToRefresh.h; sourceTree = "<group>"; };
 		A72A8EA61DA741CD002EFED7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,6 +62,8 @@
 		A72A8EA41DA741CC002EFED7 /* CedPullToRefresh */ = {
 			isa = PBXGroup;
 			children = (
+				A7094E341ED42809007C2968 /* CedRefreshDefaultFooter.swift */,
+				A7094E351ED42809007C2968 /* CedRefreshDefaultHeader.swift */,
 				A72A8EA51DA741CD002EFED7 /* CedPullToRefresh.h */,
 				A72A8EA61DA741CD002EFED7 /* Info.plist */,
 				A72A8EAD1DA743B0002EFED7 /* CedPullToRefresh.swift */,
@@ -151,10 +157,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A79E2C9A1E6036060010ED39 /* CedInfiniteRefresh.swift in Sources */,
+				A7094E371ED42809007C2968 /* CedRefreshDefaultHeader.swift in Sources */,
 				AEA463C11DA7B68C00B22D70 /* CedRefreshHeaderView.swift in Sources */,
 				A74D17D11DAB6A2D0043793B /* CedRefreshView.swift in Sources */,
 				AEA318801DAFCD6200180494 /* CedRefreshFooterView.swift in Sources */,
 				A72A8EAE1DA743B0002EFED7 /* CedPullToRefresh.swift in Sources */,
+				A7094E361ED42809007C2968 /* CedRefreshDefaultFooter.swift in Sources */,
 				A72A8EB21DA7445F002EFED7 /* CedLoadingProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
