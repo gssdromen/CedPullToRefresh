@@ -40,7 +40,8 @@ public extension UIScrollView {
 
         let height = loadingProtocol.triggerOffset
 
-        cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: 0, y: contentSize.height, width: bounds.width, height: height), lp: loadingProtocol)
+        cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: 0, y: contentSize.height + contentInset.bottom, width: bounds.width, height: height), lp: loadingProtocol)
+        cedInfiniteRefreshView.backgroundColor = UIColor.blue
 
         addSubview(cedInfiniteRefreshView)
         cedInfiniteRefreshView.triggerAction = triggerAction
@@ -52,6 +53,7 @@ public extension UIScrollView {
         if let view = cedInfiniteRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
                 view.startAnimating()
+                view.setContentInsetForRefreshing()
             })
         }
     }
@@ -60,6 +62,8 @@ public extension UIScrollView {
         if let view = cedInfiniteRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
                 view.stopAnimating()
+                view.resetContentInset()
+                view.loadingState = .done
             })
         }
     }
@@ -67,6 +71,10 @@ public extension UIScrollView {
     public func ced_needMoreData() {
         if let view = cedInfiniteRefreshView {
             view.isEmpty = false
+            if let loadingAnimator = view.loadingAnimator {
+                loadingAnimator.resetForMoreData()
+            }
+            view.loadingState = .empty
         }
     }
 
@@ -76,6 +84,7 @@ public extension UIScrollView {
             if let loadingAnimator = view.loadingAnimator {
                 loadingAnimator.setForNoMoreData()
             }
+            view.loadingState = .done
         }
     }
 }

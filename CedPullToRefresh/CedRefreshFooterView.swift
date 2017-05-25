@@ -25,7 +25,16 @@ class CedRefreshFooterView: CedRefreshView {
         super.contentSizeChangeAction()
 
         if let scrollView = scrollView {
-            frame.origin.y = scrollView.contentSize.height + scrollView.contentInset.bottom
+            var offsetY: CGFloat = 0
+            if scrollViewOriginContentInset.bottom == scrollView.contentInset.bottom {
+                offsetY = scrollView.contentSize.height + scrollView.contentInset.bottom
+            } else if scrollViewOriginContentInset.bottom == scrollView.contentInset.bottom - bounds.height {
+                return
+            }
+
+            if frame.origin.y != offsetY {
+                frame.origin.y = offsetY
+            }
         }
     }
 
@@ -60,7 +69,6 @@ class CedRefreshFooterView: CedRefreshView {
             scrollOffsetThreshold = scrollOffsetStart + bounds.height
 
             percent = abs(curOffset - scrollOffsetStart) / bounds.height
-
         } else {
             curOffset = scrollView!.contentOffset.y + scrollView!.contentInset.top
             scrollOffsetStart = 0
@@ -68,12 +76,6 @@ class CedRefreshFooterView: CedRefreshView {
 
             percent = abs(curOffset - scrollOffsetStart) / bounds.height
         }
-
-//        print("===============")
-//        print(curOffset)
-//        print(scrollOffsetStart)
-//        print(scrollOffsetThreshold)
-//        print("===============")
 
         if curOffset < scrollOffsetStart {
 
@@ -85,7 +87,7 @@ class CedRefreshFooterView: CedRefreshView {
                 }
             }
         } else if curOffset >= scrollOffsetThreshold { // 到达刷新触发线
-            if loadingState == .pulling || loadingState == .empty {
+            if loadingState == .pulling || loadingState == .done || loadingState == .empty {
                 loadingState = .releaseToRefresh
                 if loadingAnimator != nil {
                     loadingAnimator.releaseToRefresh(percent: percent)
@@ -95,13 +97,14 @@ class CedRefreshFooterView: CedRefreshView {
 
         if scrollView!.isTracking == false && loadingState == .releaseToRefresh {
             loadingState = .refreshing
+            setContentInsetForRefreshing()
+
             if loadingAnimator != nil {
                 loadingAnimator.refreshing(percent: percent)
             }
             if triggerAction != nil {
                 triggerAction!()
             }
-            setContentInsetForRefreshing()
         }
     }
 
@@ -113,12 +116,18 @@ class CedRefreshFooterView: CedRefreshView {
         }
 
         var currentInset = scrollView!.contentInset
-        currentInset.bottom = bounds.height
+        currentInset.bottom += bounds.height
         setContentInset(edgeInsets: currentInset)
     }
 
     override func resetContentInset() {
         super.resetContentInset()
+
+        guard scrollView != nil else {
+            return
+        }
+
+        setContentInset(edgeInsets: scrollViewOriginContentInset)
     }
 
     override func addObserver() {

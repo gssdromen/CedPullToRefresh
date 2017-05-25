@@ -9,9 +9,6 @@
 import UIKit
 
 private var pullToRefreshViewKey = "CedRefreshHeaderView"
-
-
-
 private let defaultPullToRefreshViewHeight: CGFloat = 60
 
 public extension UIScrollView {
