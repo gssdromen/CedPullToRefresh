@@ -37,11 +37,6 @@ class CedRefreshFooterView: CedRefreshView {
         }
 
         if isEmpty {
-            if loadingState != .empty {
-                loadingState = .empty
-                loadingAnimator.empty()
-            }
-
             return
         }
 
@@ -99,13 +94,14 @@ class CedRefreshFooterView: CedRefreshView {
         }
 
         if scrollView!.isTracking == false && loadingState == .releaseToRefresh {
-            setContentInsetForRefreshing()
+            loadingState = .refreshing
             if loadingAnimator != nil {
                 loadingAnimator.refreshing(percent: percent)
             }
             if triggerAction != nil {
                 triggerAction!()
             }
+            setContentInsetForRefreshing()
         }
     }
 
@@ -170,5 +166,4 @@ class CedRefreshFooterView: CedRefreshView {
             needsLayout = false
         }
     }
-    
 }

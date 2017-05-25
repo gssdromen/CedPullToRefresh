@@ -32,7 +32,7 @@ class CedRefreshHeaderView: CedRefreshView {
         }
 
         if contentOffset.y > scrollOffsetThreshold { // 还没到刷新的触发线
-            if loadingState == .pulling || loadingState == .done {
+            if loadingState == .pulling || loadingState == .done || loadingState == .releaseToRefresh {
                 loadingState = .pulling
                 if loadingAnimator != nil {
                     loadingAnimator.startPulling(percent: percent)
@@ -48,13 +48,14 @@ class CedRefreshHeaderView: CedRefreshView {
         }
         if let sc = scrollView {
             if sc.isTracking == false && loadingState == .releaseToRefresh {
-                setContentInsetForRefreshing()
+                loadingState = .refreshing
                 if loadingAnimator != nil {
                     loadingAnimator.refreshing(percent: percent)
                 }
                 if triggerAction != nil {
                     triggerAction!()
                 }
+                setContentInsetForRefreshing()
             }
         }
     }

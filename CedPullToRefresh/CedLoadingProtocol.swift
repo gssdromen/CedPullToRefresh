@@ -8,34 +8,36 @@
 
 import UIKit
 
-
-
 public protocol CedLoadingProtocol {
-    
+
     /// 开始滚动
     ///
     /// - Parameter percent: 0到1的CGFloat，表示百分比
     func startPulling(percent: CGFloat)
-    
-    
+
+
     /// 释放后开始更新
     ///
     /// - Parameter percent: 大于1的CGFloat，减1后表示超过的百分比
     func releaseToRefresh(percent: CGFloat)
-    
-    
+
+
     /// 开始更新状态
     ///
     /// - Parameter percent: 大于1的CGFloat，减1后表示超过的百分比，最后会变成1
     func refreshing(percent: CGFloat)
-    
-    
+
+
     /// 表示更新完成
     func done()
 
 
+    /// 恢复可刷新的状态
+    func resetForMoreData()
+
+
     /// 底部加载无更多数据 或 顶部刷新没有数据
-    func empty()
+    func setForNoMoreData()
 
     var loadingView: UIView { get }
     var triggerOffset: CGFloat { get set }

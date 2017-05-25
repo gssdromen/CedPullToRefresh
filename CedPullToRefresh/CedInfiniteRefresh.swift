@@ -73,6 +73,9 @@ public extension UIScrollView {
     public func ced_setNoMoreData() {
         if let view = cedInfiniteRefreshView {
             view.isEmpty = true
+            if let loadingAnimator = view.loadingAnimator {
+                loadingAnimator.setForNoMoreData()
+            }
         }
     }
 }

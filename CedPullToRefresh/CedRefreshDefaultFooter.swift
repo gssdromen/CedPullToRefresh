@@ -31,7 +31,11 @@ class CedRefreshDefaultFooter: UIView, CedLoadingProtocol {
         statusLabel.text = "done"
     }
 
-    func empty() {
+    func resetForMoreData() {
+        
+    }
+
+    func setForNoMoreData() {
         statusLabel.text = "no more data"
     }
     
