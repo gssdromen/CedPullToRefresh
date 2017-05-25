@@ -60,6 +60,33 @@ class CedRefreshHeaderView: CedRefreshView {
         }
     }
 
+    // MARK: - 无需手势直接代码触发
+    override func startAnimating() {
+        super.startAnimating()
+
+        if let sv = scrollView {
+            sv.contentOffset.y = -bounds.height
+        }
+        if loadingAnimator != nil {
+            loadingAnimator.refreshing(percent: 1)
+        }
+        if triggerAction != nil {
+            triggerAction!()
+        }
+    }
+
+    override func stopAnimating() {
+        super.stopAnimating()
+
+        if let sv = scrollView {
+            sv.contentOffset.y = 0
+        }
+        if loadingAnimator != nil {
+            loadingAnimator.done()
+        }
+    }
+
+    // MARK: - 设置更新时的Inset
     override func setContentInsetForRefreshing() {
         super.setContentInsetForRefreshing()
         guard scrollView != nil else {
@@ -78,9 +105,7 @@ class CedRefreshHeaderView: CedRefreshView {
             return
         }
 
-        var currentInset = scrollView!.contentInset
-        currentInset.top = scrollViewOriginContentInset.top
-        setContentInset(edgeInsets: currentInset)
+        setContentInset(edgeInsets: scrollViewOriginContentInset)
     }
 
     override func addObserver() {

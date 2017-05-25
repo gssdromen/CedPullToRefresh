@@ -45,6 +45,7 @@ public extension UIScrollView {
         if let view = cedPullToRefreshView {
             UIView.animate(withDuration: 0.2, animations: { 
                 view.startAnimating()
+                
             })
         }
     }

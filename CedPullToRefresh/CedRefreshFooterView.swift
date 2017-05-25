@@ -25,13 +25,11 @@ class CedRefreshFooterView: CedRefreshView {
         super.contentSizeChangeAction()
 
         if let scrollView = scrollView {
-            var offsetY: CGFloat = 0
-            if scrollViewOriginContentInset.bottom == scrollView.contentInset.bottom {
-                offsetY = scrollView.contentSize.height + scrollView.contentInset.bottom
-            } else if scrollViewOriginContentInset.bottom == scrollView.contentInset.bottom - bounds.height {
+            guard loadingState != .refreshing else {
                 return
             }
 
+            let offsetY: CGFloat = scrollView.contentSize.height + scrollView.contentInset.bottom
             if frame.origin.y != offsetY {
                 frame.origin.y = offsetY
             }
@@ -108,6 +106,33 @@ class CedRefreshFooterView: CedRefreshView {
         }
     }
 
+    // MARK: - 无需手势直接代码触发
+    override func startAnimating() {
+        super.startAnimating()
+
+        if let sv = scrollView {
+            sv.contentOffset.y = -bounds.height
+        }
+        if loadingAnimator != nil {
+            loadingAnimator.refreshing(percent: 1)
+        }
+        if triggerAction != nil {
+            triggerAction!()
+        }
+    }
+
+    override func stopAnimating() {
+        super.stopAnimating()
+
+        if let sv = scrollView {
+            sv.contentOffset.y = 0
+        }
+        if loadingAnimator != nil {
+            loadingAnimator.done()
+        }
+    }
+
+    // MARK: - 设置更新时的Inset
     override func setContentInsetForRefreshing() {
         super.setContentInsetForRefreshing()
 

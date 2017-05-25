@@ -53,7 +53,6 @@ public extension UIScrollView {
         if let view = cedInfiniteRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
                 view.startAnimating()
-                view.setContentInsetForRefreshing()
             })
         }
     }
@@ -62,8 +61,6 @@ public extension UIScrollView {
         if let view = cedInfiniteRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
                 view.stopAnimating()
-                view.resetContentInset()
-                view.loadingState = .done
             })
         }
     }
