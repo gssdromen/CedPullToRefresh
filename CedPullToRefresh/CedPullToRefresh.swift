@@ -24,17 +24,21 @@ public extension UIScrollView {
     }
 
     // MARK: - Public Methods
-    public func ced_addPullToRefreshWith(triggerAction: @escaping (() -> Void), loadingProtocol lp: CedLoadingProtocol? = nil) {
-        var loadingProtocol: CedLoadingProtocol = lp == nil ? CedRefreshDefaultHeader() : lp!
+    @discardableResult
+    public func ced_addPullToRefreshWith(triggerAction: @escaping (() -> Void), loadingProtocol lp: CedLoadingProtocol? = nil) -> CedRefreshHeaderView {
+        var loadingProtocol: CedLoadingProtocol = lp ?? CedRefreshDefaultHeader()
 
         let height = loadingProtocol.triggerOffset
+        let width = bounds.width == 0 ? UIScreen.main.bounds.width : bounds.width
 
-        cedPullToRefreshView = CedRefreshHeaderView(frame: CGRect(x: 0, y: -height, width: self.bounds.width, height: height), lp: loadingProtocol)
+        cedPullToRefreshView = CedRefreshHeaderView(frame: CGRect(x: 0, y: -height, width: width, height: height), lp: loadingProtocol)
 
         insertSubview(cedPullToRefreshView, at: 0)
         cedPullToRefreshView.triggerAction = triggerAction
         cedPullToRefreshView.loadingAnimator = loadingProtocol
         cedPullToRefreshView.scrollViewOriginContentInset = contentInset
+
+        return cedPullToRefreshView
     }
     
     public var ced_showsPullToRefresh: Bool {

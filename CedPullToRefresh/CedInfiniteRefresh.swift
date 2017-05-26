@@ -35,19 +35,23 @@ public extension UIScrollView {
         return !infiniteScrollingView.isHidden
     }
 
-    public func ced_addInfiniteRefreshWith(triggerAction: @escaping (() -> Void), loadingProtocol lp: CedLoadingProtocol? = nil) {
-        var loadingProtocol: CedLoadingProtocol = lp == nil ? CedRefreshDefaultFooter() : lp!
+    @discardableResult
+    public func ced_addInfiniteRefreshWith(triggerAction: @escaping (() -> Void), loadingProtocol lp: CedLoadingProtocol? = nil) -> CedRefreshFooterView {
+        var loadingProtocol: CedLoadingProtocol = lp ?? CedRefreshDefaultFooter()
 
         let height = loadingProtocol.triggerOffset
+        let width = bounds.width == 0 ? UIScreen.main.bounds.width : bounds.width
 
-        cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: 0, y: contentSize.height + contentInset.bottom, width: bounds.width, height: height), lp: loadingProtocol)
+        cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: 0, y: contentSize.height + contentInset.bottom, width: width, height: height), lp: loadingProtocol)
 
         addSubview(cedInfiniteRefreshView)
         cedInfiniteRefreshView.triggerAction = triggerAction
         cedInfiniteRefreshView.loadingAnimator = loadingProtocol
         cedInfiniteRefreshView.scrollViewOriginContentInset = contentInset
+
+        return cedInfiniteRefreshView
     }
-    
+
     public func ced_triggerInfiniteScrolling() {
         if let view = cedInfiniteRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
@@ -55,7 +59,7 @@ public extension UIScrollView {
             })
         }
     }
-    
+
     public func ced_stopInfiniteScrolling() {
         if let view = cedInfiniteRefreshView {
             UIView.animate(withDuration: 0.2, animations: {

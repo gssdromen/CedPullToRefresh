@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CedRefreshHeaderView: CedRefreshView {
+public class CedRefreshHeaderView: CedRefreshView {
     var needsLayout = true
 
     // MARK: - Views About
@@ -61,7 +61,7 @@ class CedRefreshHeaderView: CedRefreshView {
     }
 
     // MARK: - 无需手势直接代码触发
-    override func startAnimating() {
+    override public func startAnimating() {
         super.startAnimating()
 
         if let sv = scrollView {
@@ -69,7 +69,7 @@ class CedRefreshHeaderView: CedRefreshView {
         }
     }
 
-    override func stopAnimating() {
+    override public func stopAnimating() {
         super.stopAnimating()
 
         if let sv = scrollView {
@@ -136,11 +136,11 @@ class CedRefreshHeaderView: CedRefreshView {
         super.init(frame: frame)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         if self.needsLayout {
             self.layoutMyViews()

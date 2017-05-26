@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CedRefreshFooterView: CedRefreshView {
+public class CedRefreshFooterView: CedRefreshView {
     var needsLayout = true
     var isEmpty = false
 
@@ -107,7 +107,7 @@ class CedRefreshFooterView: CedRefreshView {
     }
 
     // MARK: - 无需手势直接代码触发
-    override func startAnimating() {
+    override public func startAnimating() {
         super.startAnimating()
 
         if let sv = scrollView {
@@ -116,7 +116,7 @@ class CedRefreshFooterView: CedRefreshView {
         
     }
 
-    override func stopAnimating() {
+    override public func stopAnimating() {
         super.stopAnimating()
 
 //        if let sv = scrollView {
@@ -184,11 +184,11 @@ class CedRefreshFooterView: CedRefreshView {
         super.init(frame: frame)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         if needsLayout {
             layoutMyViews()
