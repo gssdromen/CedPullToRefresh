@@ -70,9 +70,13 @@ public class CedRefreshView: UIView {
     public func startAnimating() {
         loadingState = LoadingState.refreshing
         setContentInsetForRefreshing()
-//        if triggerAction != nil {
-//            triggerAction!()
-//        }
+        
+        if loadingAnimator != nil {
+            loadingAnimator.refreshing(percent: 1)
+        }
+        if triggerAction != nil {
+            triggerAction!()
+        }
     }
 
     public func stopAnimating() {

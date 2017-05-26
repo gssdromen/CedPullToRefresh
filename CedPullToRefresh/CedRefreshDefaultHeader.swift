@@ -42,7 +42,6 @@ class CedRefreshDefaultHeader: UIView, CedLoadingProtocol {
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.blue
 
         addSubview(statusLabel)
     }

@@ -67,12 +67,6 @@ class CedRefreshHeaderView: CedRefreshView {
         if let sv = scrollView {
             sv.contentOffset.y = -bounds.height
         }
-        if loadingAnimator != nil {
-            loadingAnimator.refreshing(percent: 1)
-        }
-        if triggerAction != nil {
-            triggerAction!()
-        }
     }
 
     override func stopAnimating() {

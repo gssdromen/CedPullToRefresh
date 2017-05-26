@@ -41,7 +41,6 @@ public extension UIScrollView {
         let height = loadingProtocol.triggerOffset
 
         cedInfiniteRefreshView = CedRefreshFooterView(frame: CGRect(x: 0, y: contentSize.height + contentInset.bottom, width: bounds.width, height: height), lp: loadingProtocol)
-        cedInfiniteRefreshView.backgroundColor = UIColor.blue
 
         addSubview(cedInfiniteRefreshView)
         cedInfiniteRefreshView.triggerAction = triggerAction
