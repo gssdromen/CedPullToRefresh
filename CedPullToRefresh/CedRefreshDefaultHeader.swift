@@ -14,6 +14,7 @@ class CedRefreshDefaultHeader: UIView, CedLoadingProtocol {
     var loadingView: UIView { return self }
 
     let statusLabel = UILabel()
+    let loadingCircle = UIActivityIndicatorView()
     
     func startPulling(percent: CGFloat) {
         statusLabel.text = "startPulling"
@@ -25,10 +26,12 @@ class CedRefreshDefaultHeader: UIView, CedLoadingProtocol {
     
     func refreshing(percent: CGFloat) {
         statusLabel.text = "refreshing"
+        loadingCircle.startAnimating()
     }
     
     func done() {
         statusLabel.text = "done"
+        loadingCircle.stopAnimating()
     }
 
     func resetForMoreData() {
@@ -43,12 +46,14 @@ class CedRefreshDefaultHeader: UIView, CedLoadingProtocol {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        addSubview(statusLabel)
+//        addSubview(statusLabel)
+        addSubview(loadingCircle)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        statusLabel.frame = frame
+//        statusLabel.frame = frame
+        loadingCircle.frame = frame
     }
     
     required init?(coder aDecoder: NSCoder) {
