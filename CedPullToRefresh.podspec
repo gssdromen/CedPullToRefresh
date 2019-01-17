@@ -21,4 +21,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => "http://www.ba.com/CedPullToRefresh.git", :tag => "#{s.version}" }
 
   s.source_files  = "CedPullToRefresh/**/*.{swift}"
+  s.ios.deployment_target = '8.0'
 end

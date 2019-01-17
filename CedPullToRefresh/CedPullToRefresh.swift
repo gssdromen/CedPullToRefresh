@@ -29,20 +29,22 @@ public extension CedPullToRefreshCompatible {
     }
 }
 
-extension UIScrollView: CedPullToRefreshCompatible { }
-
-extension CedPullToRefresh where Base: UIScrollView {
-    private var cedPullToRefreshView: CedRefreshHeaderView! {
+public extension UIScrollView {
+    public var cedPullToRefreshView: CedRefreshHeaderView! {
         get {
             return objc_getAssociatedObject(self, &pullToRefreshViewKey) as? CedRefreshHeaderView
         }
         set {
-            base.willChangeValue(forKey: pullToRefreshViewKey)
-            objc_setAssociatedObject(self, &pullToRefreshViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-            base.didChangeValue(forKey: pullToRefreshViewKey)
+            willChangeValue(forKey: pullToRefreshViewKey)
+            objc_setAssociatedObject(self, &pullToRefreshViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            didChangeValue(forKey: pullToRefreshViewKey)
         }
     }
+}
 
+extension UIScrollView: CedPullToRefreshCompatible { }
+
+extension CedPullToRefresh where Base: UIScrollView {
     // MARK: - Public Methods
     @discardableResult
     public func addPullToRefreshWith(triggerAction: @escaping (() -> Void), loadingProtocol lp: CedLoadingProtocol? = nil) -> CedRefreshHeaderView {
@@ -51,22 +53,23 @@ extension CedPullToRefresh where Base: UIScrollView {
         let height = loadingProtocol.triggerOffset
         let width = base.bounds.width == 0 ? UIScreen.main.bounds.width : base.bounds.width
 
-        cedPullToRefreshView = CedRefreshHeaderView(frame: CGRect(x: 0, y: -height, width: width, height: height), lp: loadingProtocol)
+        let headerView = CedRefreshHeaderView(frame: CGRect(x: 0, y: -height, width: width, height: height), lp: loadingProtocol)
 
-        base.insertSubview(cedPullToRefreshView, at: 0)
-        cedPullToRefreshView.triggerAction = triggerAction
-        cedPullToRefreshView.loadingAnimator = loadingProtocol
-        cedPullToRefreshView.scrollViewOriginContentInset = base.contentInset
+        base.insertSubview(headerView, at: 0)
+        headerView.triggerAction = triggerAction
+        headerView.loadingAnimator = loadingProtocol
+        headerView.scrollViewOriginContentInset = base.contentInset
+        base.cedPullToRefreshView = headerView
 
-        return cedPullToRefreshView
+        return headerView
     }
 
     public var showsPullToRefresh: Bool {
-        return cedPullToRefreshView != nil ? cedPullToRefreshView!.isHidden : false
+        return base.cedPullToRefreshView != nil ? base.cedPullToRefreshView!.isHidden : false
     }
 
     public func triggerPullToRefresh() {
-        if let view = cedPullToRefreshView {
+        if let view = base.cedPullToRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
                 view.startAnimating()
             })
@@ -74,7 +77,7 @@ extension CedPullToRefresh where Base: UIScrollView {
     }
 
     public func stopPullToRefresh() {
-        if let view = cedPullToRefreshView {
+        if let view = base.cedPullToRefreshView {
             UIView.animate(withDuration: 0.2, animations: {
                 view.stopAnimating()
             })
